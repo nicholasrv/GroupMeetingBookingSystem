@@ -1,4 +1,4 @@
-package com.example.GroupMeetingBookingSystem;
+package com.example.GroupMeetingBookingSystem.repository;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

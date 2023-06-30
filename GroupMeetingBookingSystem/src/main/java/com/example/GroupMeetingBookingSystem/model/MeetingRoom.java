@@ -5,16 +5,17 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Document
 public class MeetingRoom {
-
     @Id
     private String id;
 
-    public UserEntity userEntity;
-    public LocalDateTime meetingTime;
+    private String roomName;
+    private String maxAllowance;
+    private List<String> availableResources;
     public boolean availability;
     public Booking booking;
 
