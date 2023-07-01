@@ -17,6 +17,5 @@ public class MeetingRoom {
     private String maxAllowance;
     private List<String> availableResources;
     public boolean availability;
-    public Booking booking;
 
 }

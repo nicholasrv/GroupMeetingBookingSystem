@@ -15,4 +15,5 @@ public class Booking {
     public LocalDateTime startTime;
     public LocalDateTime endTime;
     public UserEntity userEntity;
+    public MeetingRoom meetingRoom;
 }
