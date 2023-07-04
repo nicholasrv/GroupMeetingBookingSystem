@@ -16,4 +16,7 @@ public class Booking {
     public LocalDateTime endTime;
     public UserEntity userEntity;
     public MeetingRoom meetingRoom;
+
+    public Booking(LocalDateTime startTime, LocalDateTime endTime, UserEntity userEntity, MeetingRoom meetingRoom) {
+    }
 }

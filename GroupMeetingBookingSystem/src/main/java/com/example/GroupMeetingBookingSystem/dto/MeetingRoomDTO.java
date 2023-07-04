@@ -14,6 +14,6 @@ import java.util.List;
 public class MeetingRoomDTO {
     private String roomName;
     private String maxAllowance;
-    private List<String> availableResources;
+    private String availableResources;
     public boolean availability;
 }

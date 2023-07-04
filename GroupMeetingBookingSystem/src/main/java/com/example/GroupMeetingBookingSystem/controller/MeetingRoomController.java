@@ -1,16 +1,13 @@
 package com.example.GroupMeetingBookingSystem.controller;
 
-import com.example.GroupMeetingBookingSystem.dto.BookingDTO;
-import com.example.GroupMeetingBookingSystem.dto.MeetingRoomDTO;
 import com.example.GroupMeetingBookingSystem.model.MeetingRoom;
 import com.example.GroupMeetingBookingSystem.repository.MeetingRoomRepository;
-import com.example.GroupMeetingBookingSystem.service.impl.MeetingRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,19 +18,43 @@ public class MeetingRoomController {
     @Autowired
     MeetingRoomRepository meetingRoomRepository;
 
-    // GET
-    @GetMapping("/get")
-    public ResponseEntity<?> getAllRooms() {
+    // GET THE AVAILABLE ROOMS
+    @GetMapping("/available")
+    public ResponseEntity<?> getAllAvailableRooms() {
+
         List<MeetingRoom> rooms = meetingRoomRepository.findAll();
-        if (rooms.size() > 0){
-            return new ResponseEntity<List<MeetingRoom>>(rooms, HttpStatus.OK);
+        List<MeetingRoom> availableRooms = new ArrayList<>();
+
+        //iterates over the list to check those which are currently available and then adds it to an array list.
+        for(MeetingRoom room : rooms) {
+            if (room.isAvailability()) {
+                availableRooms.add(room);
+            }
+        }
+
+        // conditional statement to return the response with all the available rooms or the not found status with a message.
+        if (!availableRooms.isEmpty()){
+            return new ResponseEntity<List<MeetingRoom>>(availableRooms, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("There are no rooms available", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Sorry, but there are no rooms available.", HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    // GET ALL ROOMS
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllRooms() {
+        List<MeetingRoom> meetingRooms = meetingRoomRepository.findAll();
+        if (meetingRooms.size() > 0){
+            return new ResponseEntity<List<MeetingRoom>>(meetingRooms, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No rooms could be found.", HttpStatus.NOT_FOUND);
         }
     }
 
+
     // POST
-    @PostMapping("/new")
+    @PostMapping("/create")
     public ResponseEntity<?> createRoom(@RequestBody MeetingRoom meetingRoom) {
         try{
             meetingRoomRepository.save(meetingRoom);
