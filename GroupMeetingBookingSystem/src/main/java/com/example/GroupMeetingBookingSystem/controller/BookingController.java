@@ -1,12 +1,14 @@
 package com.example.GroupMeetingBookingSystem.controller;
 
 import com.example.GroupMeetingBookingSystem.dto.BookingDTO;
+import com.example.GroupMeetingBookingSystem.dto.UserDTO;
 import com.example.GroupMeetingBookingSystem.model.Booking;
 import com.example.GroupMeetingBookingSystem.model.MeetingRoom;
 import com.example.GroupMeetingBookingSystem.model.UserEntity;
 import com.example.GroupMeetingBookingSystem.repository.BookingRepository;
 import com.example.GroupMeetingBookingSystem.repository.MeetingRoomRepository;
 import com.example.GroupMeetingBookingSystem.repository.UserRepository;
+import com.example.GroupMeetingBookingSystem.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,9 @@ public class BookingController {
 
     @Autowired
     MeetingRoomRepository meetingRoomRepository;
+
+    @Autowired
+    EmailService emailService;
 
     // GET
     @GetMapping("/all")
@@ -49,6 +54,11 @@ public class BookingController {
         //Creates the booking
         Booking booking = new Booking(bookingDTO.getStartTime(), bookingDTO.getEndTime(), userEntity, meetingRoom);
 
+        // Gets the user email and prepares the booking confirmation message
+        String recipientEmail = bookingDTO.getEmail();
+        String subject = "Group Meeting System - Booking Confirmation";
+        String content = "Dear User, your booking has been confirmed for room, " + meetingRoom.getRoomName().toString() + " on the following date/timeframe: " + bookingDTO.getStartTime().toString() + bookingDTO.getEndTime().toString() + " . Thank you very much!";
+
         assert meetingRoom != null;
 
         // checks if the selected meeting room is available
@@ -56,6 +66,8 @@ public class BookingController {
 
             try {
                 bookingRepository.save(booking);
+                meetingRoom.setAvailability(false);
+                emailService.sendBookingConfirmationEmail(recipientEmail, subject, content);
                 return new ResponseEntity<Booking>(booking, HttpStatus.OK);
             } catch (Exception e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

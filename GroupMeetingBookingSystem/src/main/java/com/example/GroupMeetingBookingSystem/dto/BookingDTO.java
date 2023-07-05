@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class BookingDTO {
     public LocalDateTime startTime;
     public LocalDateTime endTime;
+    public String email;
     public String idUser;
     public String idRoom;
 

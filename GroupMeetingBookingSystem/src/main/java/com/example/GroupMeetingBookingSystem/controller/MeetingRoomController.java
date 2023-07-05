@@ -73,7 +73,7 @@ public class MeetingRoomController {
             meetingRoomToBeUpdated.setRoomName(meetingRoom.getRoomName() != null ? meetingRoom.getRoomName() : meetingRoomToBeUpdated.getRoomName());
             meetingRoomToBeUpdated.setMaxAllowance(meetingRoom.getMaxAllowance() != null ? meetingRoom.getMaxAllowance() : meetingRoomToBeUpdated.getMaxAllowance());
             meetingRoomToBeUpdated.setAvailableResources(meetingRoom.getAvailableResources() != null ? meetingRoom.getAvailableResources() : meetingRoomToBeUpdated.getAvailableResources());
-            meetingRoomRepository.save(meetingRoom);
+            meetingRoomRepository.save(meetingRoomToBeUpdated);
             return new ResponseEntity<>(meetingRoomToBeUpdated, HttpStatus.OK);
         }else {
             return new ResponseEntity<>("No meeting rooms were found with id " + id, HttpStatus.NOT_FOUND);

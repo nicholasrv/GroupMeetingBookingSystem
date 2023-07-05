@@ -1,19 +1,13 @@
 package com.example.GroupMeetingBookingSystem.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    public String firstName;
-    public String lastName;
-    public String email;
     public String username;
-    public String password;
 }

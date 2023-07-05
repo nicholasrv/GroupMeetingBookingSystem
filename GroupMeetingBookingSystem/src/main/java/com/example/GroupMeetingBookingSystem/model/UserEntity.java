@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Document
 public class UserEntity {
@@ -17,4 +20,6 @@ public class UserEntity {
     public String email;
     public String username;
     public String password;
+
+    private List<Role> roles = new ArrayList<>();
 }
