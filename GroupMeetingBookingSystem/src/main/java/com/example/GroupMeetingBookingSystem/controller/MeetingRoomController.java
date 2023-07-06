@@ -5,6 +5,7 @@ import com.example.GroupMeetingBookingSystem.repository.MeetingRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class MeetingRoomController {
 
     // POST
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> createRoom(@RequestBody MeetingRoom meetingRoom) {
         try{
             meetingRoomRepository.save(meetingRoom);
@@ -66,6 +68,7 @@ public class MeetingRoomController {
 
     // UPDATE
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity updateMeetingRoomById(@PathVariable("id") String id, @RequestBody MeetingRoom meetingRoom){
         Optional<MeetingRoom> idMeetingRoom = meetingRoomRepository.findById(id);
         if (idMeetingRoom.isPresent()) {
@@ -93,6 +96,7 @@ public class MeetingRoomController {
 
     // DELETE
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteRoomById(@PathVariable("id") String id) {
         try{
             meetingRoomRepository.deleteById(id);

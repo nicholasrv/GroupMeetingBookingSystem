@@ -11,6 +11,7 @@ import com.example.GroupMeetingBookingSystem.security.JWTGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,7 +42,7 @@ public class AuthController {
         this.jwtGenerator = jwtGenerator;
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getUsername(),
@@ -52,7 +53,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegistrationDTO registrationDTO) {
         if(userRepository.existsByUsername(registrationDTO.getUsername())){
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
@@ -73,7 +74,8 @@ public class AuthController {
         return new ResponseEntity<>("User registered successfully!", HttpStatus.OK);
     }
 
-    @PostMapping("register/admin")
+    @PostMapping("/register/admin")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> registerAdmin(@RequestBody RegistrationDTO registrationDTO) {
         if(userRepository.existsByUsername(registrationDTO.getUsername())){
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);

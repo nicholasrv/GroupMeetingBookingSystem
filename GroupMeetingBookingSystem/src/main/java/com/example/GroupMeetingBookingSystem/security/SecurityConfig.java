@@ -39,10 +39,12 @@ public class SecurityConfig extends WebSecurityConfiguration {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                .antMatchers("/api/rooms/create", "/api/rooms/delete/{id}", "/api/rooms/update/{id}","/api/auth/register/admin").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
+
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

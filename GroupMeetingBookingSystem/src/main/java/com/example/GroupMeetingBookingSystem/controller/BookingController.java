@@ -12,6 +12,7 @@ import com.example.GroupMeetingBookingSystem.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,20 +55,28 @@ public class BookingController {
         //Creates the booking
         Booking booking = new Booking(bookingDTO.getStartTime(), bookingDTO.getEndTime(), userEntity, meetingRoom);
 
+        assert meetingRoom != null;
+
         // Gets the user email and prepares the booking confirmation message
         String recipientEmail = bookingDTO.getEmail();
         String subject = "Group Meeting System - Booking Confirmation";
-        String content = "Dear User, your booking has been confirmed for room, " + meetingRoom.getRoomName().toString() + " on the following date/timeframe: " + bookingDTO.getStartTime().toString() + bookingDTO.getEndTime().toString() + " . Thank you very much!";
+        String content = "Dear User, your booking has been confirmed for room, " + meetingRoom.getRoomName() + " on the following date/timeframe: " + bookingDTO.getStartTime().toString() + bookingDTO.getEndTime().toString() + " . Thank you very much!";
 
-        assert meetingRoom != null;
 
         // checks if the selected meeting room is available
         if (meetingRoom.isAvailability()) {
 
             try {
+                //save the booking
                 bookingRepository.save(booking);
+
+                //set the meeting room as unavailable from now on and update the object on the database
                 meetingRoom.setAvailability(false);
+                meetingRoomRepository.save(meetingRoom);
+
+                //send the confirmation email to customer
                 emailService.sendBookingConfirmationEmail(recipientEmail, subject, content);
+
                 return new ResponseEntity<Booking>(booking, HttpStatus.OK);
             } catch (Exception e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
